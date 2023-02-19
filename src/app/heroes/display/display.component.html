@@ -1,0 +1,11 @@
+<div>
+    <h1>HEROES 23</h1>
+    <ul *ngFor="let hero of heroes">
+      <ul>
+        <li>{{hero.name}} , {{hero.height}}, {{hero.origin}}</li>
+        <ul *ngFor="let skill of hero.skills">
+            <li>{{skill}}</li>
+        </ul>
+      </ul>
+    </ul>
+  </div>

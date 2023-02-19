@@ -1,0 +1,27 @@
+<p>heroes works!</p>
+<div>
+    <div>
+        <button routerLink="/display">display</button>
+    </div>
+    <div>
+        <form [formGroup]="newHeroForm" (ngSubmit)="onSubmit()">
+            <div>
+                <label>Name</label>
+                <input formControlName="name" [(ngModel)]="hero.name">
+            </div>
+            <div>
+                <label>Height</label>
+                <input formControlName="height" [(ngModel)]="hero.height">
+            </div>
+            <div>
+                <label>Origin</label>
+                <input formControlName="origin" [(ngModel)]="hero.origin">
+            </div>
+            <div>
+                <label>Skills</label>
+                <input formControlName="skills" [(ngModel)]="hero.skills">
+            </div>
+            <button>Submit</button>
+        </form>
+    </div> 
+</div>
