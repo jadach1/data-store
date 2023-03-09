@@ -1,0 +1,1 @@
+edit hero: add actions start and stop edit plus properties

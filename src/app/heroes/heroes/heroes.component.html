@@ -1,25 +1,28 @@
-<p>heroes works!</p>
 <div>
     <div>
-        <button routerLink="/display">display</button>
+        <button class="bg-warning" routerLink="/display">display</button>
     </div>
     <div>
         <form [formGroup]="newHeroForm" (ngSubmit)="onSubmit()">
             <div>
                 <label>Name</label>
-                <input formControlName="name" [(ngModel)]="hero.name">
+                <input formControlName="name">
             </div>
             <div>
                 <label>Height</label>
-                <input formControlName="height" [(ngModel)]="hero.height">
+                <input formControlName="height" >
             </div>
             <div>
                 <label>Origin</label>
-                <input formControlName="origin" [(ngModel)]="hero.origin">
+                <input formControlName="origin">
             </div>
-            <div>
+            <div formArrayName="skills">
                 <label>Skills</label>
-                <input formControlName="skills" [(ngModel)]="hero.skills">
+                <button class="btn btn-default" type="button" (click)="onAddSkill()">Add Skill</button>
+                <div class="form-group"
+                      *ngFor="let skillControl of newHeroForm.get('skills').value; let i = index">
+                    <input type="text" [formControlName]="i">    
+                </div>
             </div>
             <button>Submit</button>
         </form>

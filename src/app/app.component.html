@@ -1,14 +1,29 @@
 <div>
-  <h1>HEROES 2</h1>
+  <h1>HEROES</h1>
   <ul *ngFor="let hero of heroes">
-    <ul>
-      <li>{{hero.name}} , {{hero.height}}, {{hero.origin}}</li>
-      <ul *ngFor="let skill of hero.skills">
-          <li>{{skill}}</li>
-      </ul>
-    </ul>
+      <li>{{hero.name}}</li>
   </ul>
 </div>
-<button routerLink="add">add hero</button>
-<button routerLink="display">heroes</button>
+ <div>
+    <button class="bg-success" routerLink="add">add hero</button>
+    <button class="bg-danger" routerLink="display">heroes</button>
+
+
+      <mat-form-field appearance="fill" >
+      <mat-label>Select a Hero to Edit</mat-label>
+      <mat-select >
+        <mat-option (click)="updateHero(null)">None</mat-option>
+        <mat-option 
+          class="bg-warning" 
+          (click)="updateHero(hero)"
+          *ngFor="let hero of heroes"
+          [value]="hero.name">
+            {{hero.name}}
+        </mat-option>
+      </mat-select>
+     </mat-form-field>
+     <button class="bg-warning" [disabled]="updateButtonDisabled" routerLink="update" (click)="disableMe()">UPDATE</button>
+
+ </div>
+ <div style="margin-top: 100px; position: relative;"></div>
 <router-outlet></router-outlet>

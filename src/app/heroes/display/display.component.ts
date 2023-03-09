@@ -1,30 +1,29 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import {Hero} from '../../Models/hero'
-import { Subscription } from 'rxjs';
-import { HeroesService } from '../../service/heroes.service'
+import {Observable, Subscription } from 'rxjs';
+import { Store, Action } from '@ngrx/store';
+import * as heroActions from '../Store/heroes.actions'
+import * as fromHeroList from '../Store/heroes.reducer'
 
 @Component({
   selector: 'app-display',
   templateUrl: './display.component.html',
   styleUrls: ['./display.component.css']
 })
-export class DisplayComponent {
-  constructor(private heroService: HeroesService){console.log("display comp init")}
+export class DisplayComponent implements OnDestroy {
 
-  heroes: Hero[] = [];
+  constructor(private store: Store<fromHeroList.AppState>) {console.log("display comp init")}
 
-ngOnInit(): void {
-  // We created 1 hero in Service which is loaded before this component.  So we concat
-   this.heroService.getHeroes();      
-}
+  heroes: Observable<fromHeroList.State>;
 
-ngOnDestroy(): void {
-console.log("destroyed display component")
-}
+  ngOnInit(): void {
+    
+        this.heroes = this.store.select('heroList')
+  }
 
-status: Subscription = this.heroService.status.subscribe( string => alert("display:: " + string))
-subscription: Subscription = this.heroService.heroesUpdated.subscribe(
-        newHeroes => this.heroes = this.heroes.concat(newHeroes), 
-        err => console.log("error updating heroes", 
-        () => console.log("done with updating heroes")));
+  ngOnDestroy(): void {
+  console.log("destroyed display component")
+  }
+
+
 }

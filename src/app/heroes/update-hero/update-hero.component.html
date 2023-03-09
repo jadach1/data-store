@@ -1,0 +1,15 @@
+<form [formGroup]="updateHeroForm" (ngSubmit)="onSubmit()">
+    <div>
+        <label for="name">Name</label>
+        <input type="text" formControlName="edit_name" >
+    </div>
+    <div>
+        <label for="height">Height</label>
+        <input type="text" formControlName="edit_height">
+    </div>
+    <div>
+        <label for="origin">Origin</label>
+        <input type="text" formControlName="edit_origin">
+    </div>
+    <button >Make Changes</button>
+</form>

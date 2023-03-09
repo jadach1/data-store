@@ -1,50 +1,55 @@
-import { EventEmitter, Injectable, OnDestroy, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import {Injectable, OnInit} from '@angular/core';
+import {Store} from '@ngrx/store';
+import * as fromHeroList from '../heroes/Store/heroes.reducer'
+import * as HeroActions from '../heroes/Store/heroes.actions'
 import {Hero} from '../Models/hero'
+import Swal from 'sweetalert2'
+
 
 @Injectable({
   providedIn: 'root'
 })
+export class HeroesService implements OnInit{
 
+  // Save the State 
+  heroesStatus: fromHeroList.State;
+ // heroes:Hero[] = [];
 
-export class HeroesService implements OnDestroy {
+  constructor(private store: Store<fromHeroList.AppState>) { }
 
-  hero: Hero = new Hero();
-  heroes: Hero[] = [];
-  heroesUpdated = new EventEmitter<Hero[]>();
-  status = new EventEmitter<string>();
-
-  constructor() {
-    this.hero = {
-      name: "Abhish",
-      height: "194",
-      origin: "India",
-      skills: ["Cunning","Tactition"]      
-    }
-
-    this.heroes.push(this.hero);
-    this.hero = new Hero();
-    this.heroesUpdated.emit(this.heroes);
-    console.log("Service Initiated")
-   }
-
-  ngOnDestroy(): void {
-      console.log("Service Destroyed")
+  ngOnInit(): void {
+    console.log("initialising Hero Store")
+    this.store.select('heroList').subscribe({
+      next: (heroesStatus) => {this.heroesStatus = heroesStatus, console.log(heroesStatus)},
+      error: (err) => console.log(err),
+      complete: ()=> Swal.fire('Heroes Have Arrived from their HeadQuarters!')
+    })
   }
 
-  public addHeroes(newHeroes: Hero[]){
-      this.heroes = this.heroes.concat(newHeroes);
-      this.status.emit("updated heroes list")
+  /*RETURN ALL HEROES */
+  getHeroes(): Hero[] {
+    return this.heroesStatus.Heroes;
   }
 
-  public addHero(newHero: Hero){
-    this.heroes.push(newHero)
-    this.status.emit("updated heroes list with new Hero: " + newHero.name)
-    this.heroesUpdated.emit(this.heroes);
+  addHero(hero: Hero) {
+    this.store.dispatch(new HeroActions.AddHero(hero))
   }
 
-  public getHeroes() {
-    this.heroesUpdated.emit(this.heroes);
+  addHeroes(heroes: Hero[]) {
+    this.store.dispatch(new HeroActions.AddHeroes(heroes))
   }
 
+  /*RETURN A HERO WE WISH TO EDIT */
+  getHeroToEdit(): Hero{
+    let index = this.heroesStatus.editedHeroIndex;
+    if (index != -1)
+      return this.heroesStatus.Heroes[index];
+    else
+      return null
+  }
+
+  /*UPDATE A HERO WE HAVE HERE */
+  updateHero(newHero: Hero) {
+    this.store.dispatch(new HeroActions.UpdateHero({index: newHero.id, hero: newHero}))
+  }
 }

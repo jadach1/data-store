@@ -1,6 +1,6 @@
 <div>
-    <h1>HEROES 23</h1>
-    <ul *ngFor="let hero of heroes">
+    <h1>HEROES Full List</h1>
+    <ul *ngFor="let hero of (heroes | async).Heroes" >
       <ul>
         <li>{{hero.name}} , {{hero.height}}, {{hero.origin}}</li>
         <ul *ngFor="let skill of hero.skills">

@@ -1,36 +1,57 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {Hero} from '../app/Models/hero'
-import { Subscription } from 'rxjs';
-import { HeroesService } from '../app/service/heroes.service'
+import { Observable, Subscription } from 'rxjs';
+import { Store } from '@ngrx/store';
+import {HeroesService} from '../app/service/heroes.service'
+import * as fromHeroList from '../app/heroes/Store/heroes.reducer'
+import * as heroActions from '../app/heroes/Store/heroes.actions'
+import Swal from 'sweetalert2'
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements OnInit, OnDestroy {
-  constructor(private heroService: HeroesService){console.log("app comp init")}
-  
-  heroes: Hero[] = [
-                    {name:"larry", height : "180", origin:"Canada", skills:['Strength'] },
-                    {name: "Kiegan", height: "201", origin:"England", skills:['Speed']}
-                  ];
 
-subscription: Subscription = this.heroService.heroesUpdated.subscribe(
-      newHeroes => {this.heroes = newHeroes}, 
-      err => console.log("error updating heroes", 
-      () => console.log("done with updating heroes")));
+export class AppComponent implements OnInit, OnDestroy {
+
+  constructor( private store: Store<fromHeroList.AppState>)
+              {console.log("app comp init")}
+  
+    //heroes: Observable<fromHeroList.State>;
+    title='Data-Store'
+    subscription: Subscription;
+    heroes: Hero[] = [];
+    updateButtonDisabled: boolean = true;
+  
 
   ngOnInit(): void {
-  // We created 1 hero in Service which is loaded before this component.  So we concat
-    this.heroService.getHeroes();
-  // Add the heroes we have statically coded here
-   this.heroService.addHeroes(this.heroes);  
-   console.log("initiate App comp")        
-}
+     this.subscription =  this.store.select('heroList').subscribe(
+    {
+      next: (Heroes) => this.heroes = Heroes.Heroes,
+      error: (err)  => console.log(err) 
+    }
+   )
 
+   Swal.fire('Welcome to the Heroes Application Where We Test Out The Functionality of NgRX Store !')
+  }
+
+  /*UPDATE AN EXISTING HERO.  WE SET THE INDEX WE WISH TO UPDATE IN THE STORE HERE */
+  updateHero(hero: Hero){
+    if (hero === null) {
+      this.updateButtonDisabled = true;
+    } else {
+      this.updateButtonDisabled = false
+    }
+    this.store.dispatch(new heroActions.EditHeroStart(this.heroes.indexOf(hero)))
+  }
+
+  disableMe(){
+    this.updateButtonDisabled=true;
+  }
   ngOnDestroy(): void {
     console.log("destroyed app component")
+    this.subscription.unsubscribe()
 }
 
 
