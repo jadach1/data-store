@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule} from '@angular/router';
 import {DisplayComponent} from '../../app/heroes/display/display.component'
+import { AppComponent } from '../app.component';
 import {HeroesComponent} from '../heroes/heroes/heroes.component'
 import {UpdateHeroComponent} from '../heroes/update-hero/update-hero.component'
 
